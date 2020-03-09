@@ -201,7 +201,7 @@ function checknumberpaymentmethod_civicrm_buildForm($formName, &$form) {
     ) {
       return;
     }
-    if (!empty($form->_defaultValues['payment_instrument_id'])) {
+    if (!empty($form->_defaultValues['payment_instrument_id']) && empty($form->_mode)) {
       _checknumberpaymentmethod_add_payment_fields(
         $form,
         $form->_defaultValues['payment_instrument_id']
@@ -291,7 +291,7 @@ function _checknumberpaymentmethod_add_payment_fields(&$form, $paymentInstrument
  */
 function checknumberpaymentmethod_civicrm_pre($op, $objectName, $id, &$params) {
   if ($objectName == 'Contribution' && in_array($op, ['create', 'edit'])) {
-    if (!CRM_Utils_System::isNull($params['check_number'])
+    if ((isset($params['check_number']) && !CRM_Utils_System::isNull($params['check_number']))
       || !empty($_POST['check_number'])
       || !empty($params['payment_instrument_check_number'])
     ) {
